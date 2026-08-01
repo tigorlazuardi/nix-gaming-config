@@ -10,6 +10,7 @@
   };
 
   boot = {
+    tmp.cleanOnBoot = true;
     consoleLogLevel = 3;
     kernelParams = [ "quiet" ];
     plymouth.enable = true;
