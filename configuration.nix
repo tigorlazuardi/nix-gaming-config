@@ -73,6 +73,9 @@
   users.users.gamer = {
     isNormalUser = true;
     description = "Gaming user";
+    # ponytail: initial password only applies on user creation; change it with
+    # `passwd` after first login. Public repo, so hash is disposable.
+    initialHashedPassword = "$6$6o2yOWhqYIXE6rho$JjOjtVOR/YKwA8vOEBpBGNZNfUPsyUSiJiKs0yZZpJPR6jVsrC1ZRtHwn97lbpv35TguTbKDBySVcvRDI30Sj/";
     extraGroups = [
       "networkmanager"
       "wheel"
