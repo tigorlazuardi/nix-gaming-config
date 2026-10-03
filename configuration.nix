@@ -7,6 +7,9 @@
   networking = {
     hostName = "steamos";
     networkmanager.enable = true;
+    # ponytail: firewall off for LAN game hosting (co-op games listen on
+    # arbitrary ports). Fine on trusted home LAN; revisit if laptop roams.
+    firewall.enable = false;
   };
 
   boot = {
