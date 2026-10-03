@@ -64,10 +64,12 @@
   environment.systemPackages = [
     pkgs.git
     pkgs.chromium
+    (pkgs.writeShellScriptBin "rebuild" ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+      exec sudo nixos-rebuild switch --flake github:tigorlazuardi/nix-gaming-config#steamos --refresh "$@"
+    '')
   ];
-
-  programs.bash.shellAliases.rebuild =
-    "sudo nixos-rebuild switch --flake github:tigorlazuardi/nix-gaming-config#steamos --refresh";
 
   # ponytail: systemd auto-detects the motherboard watchdog; raise 30s if it
   # causes false resets on this hardware.
