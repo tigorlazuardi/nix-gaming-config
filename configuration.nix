@@ -57,6 +57,9 @@
     fstrim.enable = true;
   };
   security.rtkit.enable = true;
+  # ponytail: passwordless sudo for wheel — gaming box, single trusted user.
+  # Covers the case where the account is locked (no password set yet).
+  security.sudo.wheelNeedsPassword = false;
 
   environment.systemPackages = [
     pkgs.git
