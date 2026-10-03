@@ -5,14 +5,13 @@ on:
     - cron: "30 22 * * *" # 05:30 WIB daily
   workflow_dispatch: {}
 
-# One update PR at a time; new run supersedes a still-open one.
+# One update at a time; new run supersedes a still-running one.
 concurrency:
   group: daily-flake-update
   cancel-in-progress: true
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   update-flake:
@@ -25,26 +24,14 @@ jobs:
       - name: nix flake update
         run: nix flake update
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        id: cpr
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: flake-update
-          delete-branch: true
-          title: "chore: daily nix flake update"
-          commit-message: "chore: daily nix flake update"
-          labels: |
-            dependencies
-            github_actions:dependencies
-
-          body: |
-            Automated daily `nix flake update` by GitHub Actions.
-
-            Review flake.lock diff, then merge.
-
-      - name: PR info
+      - name: Commit and push to main
         run: |
-          echo "pr=${{ steps.cpr.outputs.pull-request-number }}"
-          echo "url=${{ steps.cpr.outputs.pull-request-url }}"
-          echo "updated=${{ steps.cpr.outputs.pr-updated }}" >> "$GITHUB_STEP_SUMMARY"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet flake.lock; then
+            echo "flake.lock already up to date, nothing to commit"
+            exit 0
+          fi
+          git add flake.lock
+          git commit -m "chore: daily nix flake update"
+          git push
