@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # ponytail: Generated hardware stays separate; add this import after install.
@@ -54,6 +54,18 @@
     fstrim.enable = true;
   };
   security.rtkit.enable = true;
+
+  environment.systemPackages = [
+    pkgs.git
+    pkgs.chromium
+  ];
+
+  # ponytail: systemd auto-detects the motherboard watchdog; raise 30s if it
+  # causes false resets on this hardware.
+  systemd.settings.Manager = {
+    RuntimeWatchdogSec = "30s";
+    RebootWatchdogSec = "10min";
+  };
 
   users.users.gamer = {
     isNormalUser = true;
